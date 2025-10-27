@@ -1,5 +1,9 @@
 # MovieVault: Movie Management App
 
+## Deployment Link: [https://movie-tracker-deployment-testing-fr.vercel.app/](MovieVault) 🔗
+
+The entire full stack application can be explored through the link. Feel free to test all features the app promises and share link among friends for their cinematic management experience.
+
 ## Overview
 
 **MovieVault** is a full-stack web application designed for movie enthusiasts to manage their personal collection of films and web series. With a sleek, cinema-inspired interface, users can securely register/login, create detailed movie entries, view them in a searchable/filterable list, edit, and delete records. The app emphasizes responsive design, smooth animations, and intuitive UX, making it a delightful experience on both desktop and mobile devices.
