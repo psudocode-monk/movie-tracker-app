@@ -1,192 +1,193 @@
-# Movie Management App
+# MovieVault: Movie Management App
 
 ## Overview
 
-Welcome to **MovieVault**, a full-stack web application for managing your favorite movies and web series. Built with a modern tech stack, it allows users to register, log in, create, view, edit, and delete movie entries with a sleek, responsive UI. The app features authentication, search/filter capabilities, and a cinema-themed design.
+**MovieVault** is a full-stack web application designed for movie enthusiasts to manage their personal collection of films and web series. With a sleek, cinema-inspired interface, users can securely register/login, create detailed movie entries, view them in a searchable/filterable list, edit, and delete records. The app emphasizes responsive design, smooth animations, and intuitive UX, making it a delightful experience on both desktop and mobile devices.
 
-### Key Features
-- **User Authentication**: Secure login/register with JWT/cookie-based sessions.
-- **Movie CRUD**: Create, read, update, and delete movies with validation.
-- **Search & Filter**: Search by title/director and filter by genre.
-- **Responsive Design**: Mobile-first UI with beautiful animations using Framer Motion.
-- **Real-time Feedback**: Loading states, error handling, and success messages.
+Whether you're curating your watchlist or analyzing favorites, MovieVault turns movie management into an engaging journey. Built with modern tools for scalability and maintainability.
 
-### Tech Stack
-- **Frontend**: React (18+), React Router, Axios, Tailwind CSS, Framer Motion, React Icons.
-- **Backend**: Node.js, Express.js, Mongoose (MongoDB ODM), bcryptjs (password hashing), CORS, JSON Web Tokens (JWT).
-- **Database**: MongoDB (NoSQL).
-- **Other**: Vite (build tool for frontend).
+## Tech Stack
 
-## Prerequisites
+### Frontend
+- **React** (18+): Core library for building the UI.
+- **React Router**: Client-side routing for seamless navigation.
+- **Axios**: HTTP client for API requests.
+- **Tailwind CSS**: Utility-first CSS framework for styling.
+- **Framer Motion**: Animation library for smooth transitions and interactions.
+- **React Icons**: Icon library (Font Awesome) for UI elements.
+- **Vite**: Fast build tool and dev server.
 
-Before setting up, ensure you have the following installed:
-- **Node.js** (v18+): [Download here](https://nodejs.org/).
-- **MongoDB**: [Install MongoDB Community Server](https://www.mongodb.com/docs/manual/installation/) or use [MongoDB Atlas](https://www.mongodb.com/atlas) (cloud-hosted).
-- **npm** or **yarn** (package managers).
-- A code editor like VS Code.
+### Backend
+- **Node.js & Express.js**: Server framework for RESTful APIs.
+- **Mongoose**: ODM for MongoDB schema modeling and validation.
+- **bcryptjs**: Password hashing for secure authentication.
+- **jsonwebtoken (JWT)**: Token-based authentication (with cookie sessions).
+- **CORS**: Cross-origin resource sharing for frontend-backend communication.
+- **dotenv**: Environment variable management.
 
-## Installation & Setup
+### Database
+- **MongoDB**: NoSQL database for flexible data storage.
+- **MongoDB Atlas**: Cloud-hosted option for easy deployment.
+- **MongoDB Compass**: GUI tool for data visualization and querying.
 
-### Backend Setup
-1. **Clone/Navigate to Backend Directory**:
+### Other Tools
+- **npm/yarn**: Package managers.
+- **Git/GitHub**: Version control.
+
+## Features
+
+### Authentication & Security
+- **User Registration**: Create accounts with name, email, and password (hashed with bcrypt).
+- **Secure Login/Logout**: JWT-based sessions with cookie storage for stateless auth.
+- **Protected Routes**: All movie operations require authentication; redirects to login on unauthorized access.
+- **Password Protection**: Strong hashing ensures secure credential storage.
+
+### Movie Management (CRUD)
+- **Create Movie**: Form to add movies with fields like title, director, budget, location, duration, year/time, genre, rating (0-10), and optional description. Real-time validation and error handling.
+- **View Movies**: Responsive table (desktop) or card grid (mobile) displaying all user movies. Includes search by title/director and filter by genre.
+- **Edit Movie**: Pre-filled form to update existing movies; fetches data by ID and handles optimistic updates.
+- **Delete Movie**: Double-click confirmation for safety; removes from UI immediately on success.
+
+### UI/UX Enhancements
+- **Responsive Design**: Mobile-first layout with Tailwind CSS; adapts seamlessly from phones to desktops.
+- **Animations**: Framer Motion for entrance effects, hover interactions, loading spinners, and staggered reveals (e.g., form fields animate in sequence).
+- **Themed Interface**: Dark cinema-inspired theme with emerald accents, gradients, and backdrop blurs for a modern, immersive feel.
+- **Error Handling**: Graceful 404 pages, loading states, and user-friendly error messages with animated icons.
+- **Search & Filter**: Real-time filtering without page reloads; shows result counts (e.g., "Showing 5 of 12 movies").
+
+### Performance & Accessibility
+- **Fast Loading**: Vite for quick dev/build; optimized API calls with Axios interceptors.
+- **Accessibility**: Semantic HTML, ARIA labels, keyboard navigation, and high-contrast themes.
+- **Validation**: Frontend form validation + backend schema enforcement.
+
+## Quick Start
+
+### Prerequisites
+- Node.js (v18+)
+- MongoDB (local or Atlas)
+- Git (for cloning)
+
+### Setup Instructions
+
+1. **Clone the Repository**:
    ```
-   cd backend  # Or clone your repo
+   git clone <your-repo-url>
+   cd movievault
    ```
 
-2. **Install Dependencies**:
-   ```
-   npm install
-   ```
-   Key packages: `express`, `mongoose`, `bcryptjs`, `jsonwebtoken`, `cors`, `dotenv`.
-
-3. **Environment Configuration**:
-   - Create a `.env` file in the backend root:
+2. **Backend Setup**:
+   - Navigate to backend folder:
+     ```
+     cd backend
+     npm install
+     ```
+   - Copy the provided `.env` file (already in repo for reference) and update:
      ```
      PORT=8000
-     MONGODB_URI=mongodb://localhost:27017/movievault  # Or your MongoDB Atlas URI
-     JWT_SECRET=your_super_secret_jwt_key_here  # Generate a strong secret
+     MONGODB_URI=your_mongodb_connection_string_here
+     JWT_SECRET=your_super_secret_jwt_key_here  # Use a strong, random string
      ```
-   - Replace `MONGODB_URI` with your MongoDB connection string.
+   - For MongoDB (recommended: Atlas for ease):
+     - Go to [MongoDB Atlas](https://www.mongodb.com/atlas).
+     - Create a free cluster (M0 tier), select AWS Mumbai region.
+     - Create a database user (e.g., username: `movieuser`, password: `securepass`).
+     - Whitelist your IP (0.0.0.0/0 for dev).
+     - Get connection string: `mongodb+srv://movieuser:securepass@cluster0.xxxxx.mongodb.net/movievault?retryWrites=true&w=majority`.
+     - Replace in `.env` under `MONGODB_URI`.
+     - Install [MongoDB Compass](https://www.mongodb.com/products/compass) for GUI visualization (connect using the same string).
+   - Run backend:
+     ```
+     npm run dev  # Or npm start
+     ```
+     - Server: `http://localhost:8000`.
+
+3. **Frontend Setup**:
+   - Navigate to frontend folder:
+     ```
+     cd ../frontend
+     npm install
+     ```
+   - Run frontend:
+     ```
+     npm run dev
+     ```
+     - App: `http://localhost:5173` (Vite default).
 
 4. **Database Schema**:
-   - The app uses Mongoose schemas (no migrations needed for MongoDB).
-   - **User Model** (`models/User.js`):
-     ```javascript
-     const mongoose = require('mongoose');
+   - No migrations needed (MongoDB schemaless).
+   - Schemas auto-create on first use (User & Movie models in backend).
+   - Seed demo data manually via Compass or backend script (see below).
 
-     const userSchema = new mongoose.Schema({
-       name: { type: String, required: true },
-       email: { type: String, required: true, unique: true },
-       password: { type: String, required: true },
-     });
+## How to Use
 
-     module.exports = mongoose.model('User', userSchema);
-     ```
-   - **Movie Model** (`models/Movie.js`):
-     ```javascript
-     const mongoose = require('mongoose');
+1. **Access the App**:
+   - Open `http://localhost:5173` in your browser.
 
-     const movieSchema = new mongoose.Schema({
-       title: { type: String, required: true },
-       director: { type: String, required: true },
-       budget: { type: Number, required: true },
-       location: { type: String, required: true },
-       duration: { type: String, required: true },
-       yearOrTime: { type: String, required: true },
-       genre: { type: String, required: true },
-       rating: { type: Number, required: true },
-       description: { type: String },
-       user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-     });
+2. **Login/Register**:
+   - **Demo Account** (pre-seeded for quick testing):
+     - Name: John Doe
+     - Email: `johndoe@example.com`
+     - Password: `johndoe123`
+   - Or register a new account via the Register form (name, email, password).
+   - After login, you're redirected to the dashboard.
 
-     module.exports = mongoose.model('Movie', movieSchema);
-     ```
-   - Connect to MongoDB in `server.js` or `app.js`:
-     ```javascript
-     mongoose.connect(process.env.MONGODB_URI)
-       .then(() => console.log('MongoDB connected'))
-       .catch(err => console.error('MongoDB connection error:', err));
-     ```
+3. **Dashboard**:
+   - Welcome screen with navigation: "Create Movie" or "Show Movies/Web Series".
 
-5. **Run the Backend**:
-   ```
-   npm start  # Or nodemon server.js for development
-   ```
-   - Server runs on `http://localhost:8000`.
-   - Test endpoints: `/api/login`, `/api/register`, `/api/create-movies`.
+4. **Create Movie**:
+   - Click "Create Movie" → Fill the form (all fields except description are required) → Submit.
+   - Success: Redirects to movie list.
 
-### Frontend Setup
-1. **Clone/Navigate to Frontend Directory**:
-   ```
-   cd frontend  # Or clone your repo
-   ```
+5. **View Movies**:
+   - Click "Show Movies" → See responsive table/cards.
+   - **Search**: Type in title/director field for real-time results.
+   - **Filter**: Select genre from dropdown.
+   - Edit: Click pencil icon → Updates form.
+   - Delete: Double-click trash icon for confirmation.
 
-2. **Install Dependencies**:
-   ```
-   npm install
-   ```
-   Key packages: `react`, `react-router-dom`, `axios`, `framer-motion`, `react-icons`, `tailwindcss`.
+6. **Edit/Delete**:
+   - Edit: Pre-fills form with existing data; save changes.
+   - Delete: Confirms and removes instantly.
 
-3. **Environment Configuration**:
-   - No specific `.env` needed, but ensure API base URL is `http://localhost:8000` in Axios calls (already configured).
+7. **Logout**:
+   - Click "Logout" from any authenticated page.
 
-4. **Tailwind CSS Setup** (if not already):
-   - Ensure `tailwind.config.js` includes content paths.
-   - Import in `index.css`:
-     ```css
-     @tailwind base;
-     @tailwind components;
-     @tailwind utilities;
-     ```
+**Pro Tip**: Use MongoDB Compass to view/edit data (connect with your Atlas string). Test auth by checking `/api/get-user` in browser dev tools.
 
-5. **Run the Frontend**:
-   ```
-   npm run dev  # Vite dev server
-   ```
-   - App runs on `http://localhost:5173` (or check terminal).
+## Demo Credentials & Seeding
+- **Demo User**: As above (seed if needed):
+  ```javascript
+  // Run in backend (node seed.js or Mongo shell)
+  const bcrypt = require('bcryptjs');
+  const User = require('./models/User');
+  const hashed = await bcrypt.hash('johndoe123', 10);
+  await User.create({ name: 'John Doe', email: 'johndoe@example.com', password: hashed });
+  ```
+- Add sample movies via app or Compass for testing search/filter.
 
-### Database Setup & Migrations
-- **No Formal Migrations**: MongoDB is schemaless; schemas are defined in Mongoose models (see Backend Setup above).
-- **Initial Setup**:
-  1. Start MongoDB: `mongod` (or use Atlas dashboard).
-  2. Create database: `movievault` (auto-created on first insert).
-  3. Seed Data (Optional): Run this script in MongoDB shell or Node.js:
-     ```javascript
-     // Seed script (run in Node.js with mongoose connected)
-     const User = require('./models/User');
-     const bcrypt = require('bcryptjs');
-
-     const seedUser = async () => {
-       const hashedPassword = await bcrypt.hash('password', 10);
-       await new User({ name: 'Test User', email: 'test@example.com', password: hashedPassword }).save();
-       console.log('Demo user created!');
-     };
-     seedUser();
-     ```
-     - **Demo Credentials**: Email: `test@example.com`, Password: `password`.
-
-- **Indexes** (Optional for Performance):
-  - Run in MongoDB shell:
-    ```javascript
-    db.movies.createIndex({ title: 1, genre: 1 });  // For search/filter
-    db.users.createIndex({ email: 1 }, { unique: true });  // For auth
-    ```
-
-## Running the App
-1. Start Backend: `npm start` in `/backend`.
-2. Start Frontend: `npm run dev` in `/frontend`.
-3. Open `http://localhost:5173` in browser.
-4. Register/Login with demo credentials or create a new account.
-5. Navigate to Create Movie → Add entries → View in Show Movies.
-
-## API Endpoints
-| Method | Endpoint | Description | Auth Required |
-|--------|----------|-------------|---------------|
-| POST | `/api/register` | Register new user | No |
-| POST | `/api/login` | Login user | No |
-| GET | `/api/logout` | Logout user | Yes |
-| GET | `/api/get-user` | Get current user | Yes |
-| POST | `/api/create-movies` | Create movie | Yes |
-| GET | `/api/get-movies` | Get all movies | Yes |
-| PUT | `/api/update-movies/:id` | Update movie | Yes |
+## API Endpoints (for Dev/Testing)
+| Method | Endpoint | Description | Auth |
+|--------|----------|-------------|------|
+| POST | `/api/register` | Create user | No |
+| POST | `/api/login` | Authenticate | No |
+| GET | `/api/logout` | End session | Yes |
+| GET | `/api/get-user` | Current user | Yes |
+| POST | `/api/create-movies` | Add movie | Yes |
+| GET | `/api/get-movies` | List movies | Yes |
+| PUT | `/api/update-movie/:id` | Update movie | Yes |
 | DELETE | `/api/delete-movies/:id` | Delete movie | Yes |
-
-## Troubleshooting
-- **CORS Issues**: Ensure backend CORS allows `http://localhost:5173`.
-- **MongoDB Connection**: Check `.env` URI and MongoDB service status.
-- **Auth Errors**: Verify JWT secret and cookie settings.
-- **Frontend Proxy**: If needed, add to `vite.config.js`: `server: { proxy: { '/api': 'http://localhost:8000' } }`.
+| GET | `/api/get-movie/:id` | Fetch single movie | Yes |
 
 ## Contributing
-1. Fork the repo.
-2. Create a feature branch (`git checkout -b feature/amazing-feature`).
-3. Commit changes (`git commit -m 'Add amazing feature'`).
-4. Push to branch (`git push origin feature/amazing-feature`).
-5. Open a Pull Request.
+- Fork & clone.
+- Install deps, run locally.
+- Branch: `git checkout -b feature/your-feature`.
+- Commit: `git commit -m "Add your feature"`.
+- PR: Describe changes.
 
 ## License
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+MIT License - Free to use, modify, distribute. See [LICENSE](LICENSE) for details.
 
 ---
 
-*Built with ❤️ for movie enthusiasts. Contributions welcome! 🎬*
+🎬 **MovieVault** - Where stories come alive. Built with passion for cinema! Contributions welcome.
