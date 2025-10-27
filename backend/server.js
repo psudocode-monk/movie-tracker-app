@@ -17,6 +17,10 @@ app.use(cookieParser());
 app.use("/api", authRouter);
 app.use("/api", movieRouter);
 
+app.use("/", (req, res) => {
+  res.send({ message: "Server is running", status: "success" });
+});
+
 const port = process.env.PORT || 8080;
 
 connectDb().then(() => {
