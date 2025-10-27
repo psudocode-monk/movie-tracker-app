@@ -1,109 +1,112 @@
-import { useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
-import axios from "axios"
-import { FaEdit, FaTrash, FaSearch, FaFilm } from "react-icons/fa"
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { FaEdit, FaTrash, FaSearch, FaFilm } from "react-icons/fa";
 
 interface Movie {
-  _id: string
-  title: string
-  director: string
-  budget: number
-  location: string
-  duration: string
-  yearOrTime: string
-  genre: string
-  rating: number
-  description?: string
+  _id: string;
+  title: string;
+  director: string;
+  budget: number;
+  location: string;
+  duration: string;
+  yearOrTime: string;
+  genre: string;
+  rating: number;
+  description?: string;
 }
 
 interface User {
-  name: string
+  name: string;
 }
 
 export default function ShowMovies() {
-  const [user, setUser] = useState<User | null>(null)
-  const [movies, setMovies] = useState<Movie[]>([])
-  const [filteredMovies, setFilteredMovies] = useState<Movie[]>([])
-  const [loading, setLoading] = useState(true)
-  const [deleting, setDeleting] = useState<string | null>(null)
-  const [confirmId, setConfirmId] = useState<string | null>(null)
-  const [message, setMessage] = useState<{ text: string; type: "success" | "error" | "" }>({ text: "", type: "" })
-  const [searchTerm, setSearchTerm] = useState("")
-  const [selectedGenre, setSelectedGenre] = useState("All")
-  const navigate = useNavigate()
+  const [user, setUser] = useState<User | null>(null);
+  const [movies, setMovies] = useState<Movie[]>([]);
+  const [filteredMovies, setFilteredMovies] = useState<Movie[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [deleting, setDeleting] = useState<string | null>(null);
+  const [confirmId, setConfirmId] = useState<string | null>(null);
+  const [message, setMessage] = useState<{
+    text: string;
+    type: "success" | "error" | "";
+  }>({ text: "", type: "" });
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedGenre, setSelectedGenre] = useState("All");
+  const navigate = useNavigate();
 
   const fetchUser = async () => {
     try {
       const res = await axios.get("http://localhost:8000/api/get-user", {
         withCredentials: true,
-      })
-      setUser(res.data.user)
+      });
+      setUser(res.data.user);
     } catch {
-      setUser(null)
+      setUser(null);
     }
-  }
+  };
 
   const fetchMovies = async () => {
     try {
       const res = await axios.get("http://localhost:8000/api/get-movies", {
         withCredentials: true,
-      })
-      setMovies(res.data)
-      setFilteredMovies(res.data)
+      });
+      setMovies(res.data);
+      setFilteredMovies(res.data);
     } catch {
-      setMovies([])
-      setFilteredMovies([])
+      setMovies([]);
+      setFilteredMovies([]);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const handleDelete = async (id: string) => {
-    setDeleting(id)
+    setDeleting(id);
     try {
       await axios.delete(`http://localhost:8000/api/delete-movies/${id}`, {
         withCredentials: true,
-      })
-      setMovies((prev) => prev.filter((movie) => movie._id !== id))
-      setFilteredMovies((prev) => prev.filter((movie) => movie._id !== id))
-      setMessage({ text: "Movie deleted successfully!", type: "success" })
+      });
+      setMovies((prev) => prev.filter((movie) => movie._id !== id));
+      setFilteredMovies((prev) => prev.filter((movie) => movie._id !== id));
+      setMessage({ text: "Movie deleted successfully!", type: "success" });
     } catch {
-      setMessage({ text: "Failed to delete movie. Try again.", type: "error" })
+      setMessage({ text: "Failed to delete movie. Try again.", type: "error" });
     } finally {
-      setDeleting(null)
-      setConfirmId(null)
-      setTimeout(() => setMessage({ text: "", type: "" }), 2500)
+      setDeleting(null);
+      setConfirmId(null);
+      setTimeout(() => setMessage({ text: "", type: "" }), 2500);
     }
-  }
+  };
 
   useEffect(() => {
-    fetchUser()
-    fetchMovies()
-  }, [])
+    fetchUser();
+    fetchMovies();
+  }, []);
 
   useEffect(() => {
-    let filtered = movies
+    let filtered = movies;
 
     // Search filter (title or director)
     if (searchTerm.trim()) {
-      const lowerSearch = searchTerm.toLowerCase()
+      const lowerSearch = searchTerm.toLowerCase();
       filtered = filtered.filter(
         (movie) =>
           movie.title.toLowerCase().includes(lowerSearch) ||
           movie.director.toLowerCase().includes(lowerSearch)
-      )
+      );
     }
 
     // Genre filter
     if (selectedGenre !== "All") {
-      filtered = filtered.filter((movie) => movie.genre === selectedGenre)
+      filtered = filtered.filter((movie) => movie.genre === selectedGenre);
     }
 
-    setFilteredMovies(filtered)
-  }, [searchTerm, selectedGenre, movies])
+    setFilteredMovies(filtered);
+  }, [searchTerm, selectedGenre, movies]);
 
   // Get unique genres for filter dropdown
-  const genres = ["All", ...new Set(movies.map((movie) => movie.genre))].sort()
+  const genres = ["All", ...new Set(movies.map((movie) => movie.genre))].sort();
 
   if (loading) {
     return (
@@ -113,7 +116,7 @@ export default function ShowMovies() {
           <p className="text-xl">Loading your movies...</p>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -144,14 +147,19 @@ export default function ShowMovies() {
       {movies.length === 0 ? (
         <div className="text-center relative z-10">
           <FaFilm className="mx-auto mb-4 text-emerald-400 text-6xl" />
-          <p className="text-gray-300 text-lg">No movies added yet. Start creating some!</p>
+          <p className="text-gray-300 text-lg">
+            No movies added yet. Start creating some!
+          </p>
         </div>
       ) : (
         <div className="w-full max-w-7xl relative z-10">
           {/* Search and Filter Controls */}
           <div className="mb-6 flex flex-col sm:flex-row gap-4 items-center">
             <div className="relative flex-1 max-w-md">
-              <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
+              <FaSearch
+                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                size={16}
+              />
               <input
                 type="text"
                 placeholder="Search by title or director..."
@@ -166,7 +174,11 @@ export default function ShowMovies() {
               className="px-4 py-3 bg-black/60 backdrop-blur-md border border-white/50 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-emerald-400/50 focus:border-emerald-400 transition-all duration-200"
             >
               {genres.map((genre) => (
-                <option key={genre} value={genre} className="bg-gray-900 text-white">
+                <option
+                  key={genre}
+                  value={genre}
+                  className="bg-gray-900 text-white"
+                >
                   {genre}
                 </option>
               ))}
@@ -175,7 +187,15 @@ export default function ShowMovies() {
 
           {/* Results Count */}
           <p className="text-gray-300 text-sm mb-6 text-center">
-            Showing <span className="font-semibold text-emerald-400">{filteredMovies.length}</span> of <span className="font-semibold text-emerald-400">{movies.length}</span> movies
+            Showing{" "}
+            <span className="font-semibold text-emerald-400">
+              {filteredMovies.length}
+            </span>{" "}
+            of{" "}
+            <span className="font-semibold text-emerald-400">
+              {movies.length}
+            </span>{" "}
+            movies
           </p>
 
           {/* Mobile View: Stacked Cards */}
@@ -187,11 +207,15 @@ export default function ShowMovies() {
               >
                 <div className="flex items-center gap-3">
                   <FaFilm className="text-emerald-400" size={24} />
-                  <h3 className="text-xl font-bold text-emerald-400 flex-1">{movie.title}</h3>
+                  <h3 className="text-xl font-bold text-emerald-400 flex-1">
+                    {movie.title}
+                  </h3>
                 </div>
                 <div className="grid grid-cols-1 gap-2 text-sm">
                   <div className="flex justify-between">
-                    <span className="font-semibold text-gray-300">Director:</span>
+                    <span className="font-semibold text-gray-300">
+                      Director:
+                    </span>
                     <span className="text-white">{movie.director}</span>
                   </div>
                   <div className="flex justify-between">
@@ -204,23 +228,33 @@ export default function ShowMovies() {
                   </div>
                   <div className="flex justify-between">
                     <span className="font-semibold text-gray-300">Budget:</span>
-                    <span className="text-white">${movie.budget.toLocaleString()}</span>
+                    <span className="text-white">
+                      ${movie.budget.toLocaleString()}
+                    </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="font-semibold text-gray-300">Location:</span>
+                    <span className="font-semibold text-gray-300">
+                      Location:
+                    </span>
                     <span className="text-white">{movie.location}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="font-semibold text-gray-300">Duration:</span>
+                    <span className="font-semibold text-gray-300">
+                      Duration:
+                    </span>
                     <span className="text-white">{movie.duration}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="font-semibold text-gray-300">Year/Time:</span>
+                    <span className="font-semibold text-gray-300">
+                      Year/Time:
+                    </span>
                     <span className="text-white">{movie.yearOrTime}</span>
                   </div>
                   {movie.description && (
                     <div className="col-span-2">
-                      <span className="font-semibold text-gray-300">Description:</span>
+                      <span className="font-semibold text-gray-300">
+                        Description:
+                      </span>
                       <p className="text-white mt-1">{movie.description}</p>
                     </div>
                   )}
@@ -265,16 +299,36 @@ export default function ShowMovies() {
             <table className="min-w-full border border-white/20 border-collapse text-white text-sm rounded-xl overflow-hidden">
               <thead>
                 <tr className="bg-gradient-to-r from-emerald-700 to-emerald-800 text-white">
-                  <th className="px-6 py-4 border border-white/20 font-semibold">Title</th>
-                  <th className="px-6 py-4 border border-white/20 font-semibold">Director</th>
-                  <th className="px-6 py-4 border border-white/20 font-semibold">Budget</th>
-                  <th className="px-6 py-4 border border-white/20 font-semibold">Location</th>
-                  <th className="px-6 py-4 border border-white/20 font-semibold">Duration</th>
-                  <th className="px-6 py-4 border border-white/20 font-semibold">Year/Time</th>
-                  <th className="px-6 py-4 border border-white/20 font-semibold">Genre</th>
-                  <th className="px-6 py-4 border border-white/20 font-semibold">Rating</th>
-                  <th className="px-6 py-4 border border-white/20 font-semibold">Description</th>
-                  <th className="px-6 py-4 border border-white/20 font-semibold text-center">Actions</th>
+                  <th className="px-6 py-4 border border-white/20 font-semibold">
+                    Title
+                  </th>
+                  <th className="px-6 py-4 border border-white/20 font-semibold">
+                    Director
+                  </th>
+                  <th className="px-6 py-4 border border-white/20 font-semibold">
+                    Budget
+                  </th>
+                  <th className="px-6 py-4 border border-white/20 font-semibold">
+                    Location
+                  </th>
+                  <th className="px-6 py-4 border border-white/20 font-semibold">
+                    Duration
+                  </th>
+                  <th className="px-6 py-4 border border-white/20 font-semibold">
+                    Year/Time
+                  </th>
+                  <th className="px-6 py-4 border border-white/20 font-semibold">
+                    Genre
+                  </th>
+                  <th className="px-6 py-4 border border-white/20 font-semibold">
+                    Rating
+                  </th>
+                  <th className="px-6 py-4 border border-white/20 font-semibold">
+                    Description
+                  </th>
+                  <th className="px-6 py-4 border border-white/20 font-semibold text-center">
+                    Actions
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -283,14 +337,30 @@ export default function ShowMovies() {
                     key={movie._id}
                     className="hover:bg-white/10 transition-all duration-200 border-b border-white/10"
                   >
-                    <td className="px-6 py-4 border border-white/20 font-medium">{movie.title}</td>
-                    <td className="px-6 py-4 border border-white/20">{movie.director}</td>
-                    <td className="px-6 py-4 border border-white/20">${movie.budget.toLocaleString()}</td>
-                    <td className="px-6 py-4 border border-white/20">{movie.location}</td>
-                    <td className="px-6 py-4 border border-white/20">{movie.duration}</td>
-                    <td className="px-6 py-4 border border-white/20">{movie.yearOrTime}</td>
-                    <td className="px-6 py-4 border border-white/20 text-emerald-400 font-medium">{movie.genre}</td>
-                    <td className="px-6 py-4 border border-white/20 text-yellow-400 font-medium">{movie.rating}/10</td>
+                    <td className="px-6 py-4 border border-white/20 font-medium">
+                      {movie.title}
+                    </td>
+                    <td className="px-6 py-4 border border-white/20">
+                      {movie.director}
+                    </td>
+                    <td className="px-6 py-4 border border-white/20">
+                      ${movie.budget.toLocaleString()}
+                    </td>
+                    <td className="px-6 py-4 border border-white/20">
+                      {movie.location}
+                    </td>
+                    <td className="px-6 py-4 border border-white/20">
+                      {movie.duration}
+                    </td>
+                    <td className="px-6 py-4 border border-white/20">
+                      {movie.yearOrTime}
+                    </td>
+                    <td className="px-6 py-4 border border-white/20 text-emerald-400 font-medium">
+                      {movie.genre}
+                    </td>
+                    <td className="px-6 py-4 border border-white/20 text-yellow-400 font-medium">
+                      {movie.rating}/10
+                    </td>
                     <td className="px-6 py-4 border border-white/20 max-w-xs truncate">
                       {movie.description || "-"}
                     </td>
@@ -323,7 +393,11 @@ export default function ShowMovies() {
                               : "Delete Movie"
                           }
                         >
-                          {deleting === movie._id ? "..." : <FaTrash size={16} />}
+                          {deleting === movie._id ? (
+                            "..."
+                          ) : (
+                            <FaTrash size={16} />
+                          )}
                         </button>
                       </div>
                     </td>
@@ -331,7 +405,10 @@ export default function ShowMovies() {
                 ))}
               </tbody>
             </table>
-            <p className="py-4 font-bold text-yellow-400 text-center">Double click <span className="text-amber-100">delete icon</span> to delete a movie.</p>
+            <p className="py-4 font-bold text-yellow-400 text-center">
+              Double click <span className="text-amber-100">delete icon</span>{" "}
+              to delete a movie.
+            </p>
           </div>
         </div>
       )}
@@ -343,5 +420,5 @@ export default function ShowMovies() {
         Back to Home
       </button>
     </div>
-  )
+  );
 }
