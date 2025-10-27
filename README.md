@@ -1,6 +1,6 @@
 # MovieVault: Movie Management App
 
-## Deployment Link: [https://movie-tracker-deployment-testing-fr.vercel.app/](MovieVault) 🔗
+## Deployment Link: [https://movie-tracker-deployment-testing-fr.vercel.app/](url) 🔗
 
 The entire full stack application can be explored through the link. Feel free to test all features the app promises and share link among friends for their cinematic management experience.
 
